@@ -73,3 +73,21 @@ Rule: Assume ALL phonetic garbles of the brand name are LESARUSS unless Sean exp
 | BCPS (Broward County Public Schools) | Brandon Cole | Future (K12 client) |
 
 **BCPS note:** Never write "Baltimore" for BCPS. It is Broward County Public Schools.
+
+
+---
+
+## The Signal + PULSE (Locked 2026-04-19)
+
+| Term | Definition |
+|------|-----------|
+| The Signal | The central LESARUSS knowledge base. This GitHub repo. AI-agnostic. Formerly called Cerebro. Never use Cerebro going forward. |
+| PULSE | The communication layer between Sean/agents/members and The Signal. Tiered system (v1 through 100%). |
+| Fieldy | PULSE v1. Sean's voice memo workflow. Proof of concept for the PULSE product. |
+| PULSE v1 | iMessage bridge (Sean to V Station) + Fieldy voice memos. Sean's exclusive personal channel. |
+| PULSE 25% | Community chatbot for members. |
+| PULSE 50% | Advanced chatbot for members. |
+| PULSE 75% | The Huddle — web-based meeting room, phone-accessible, no Cowork required. |
+| PULSE 100% | Future: own AI infrastructure, own servers, own models. Claude is current vendor, not permanent. |
+| V Station | The Mac Mini running autonomously 24/7. Victoria's station. iMessage bridge is live as of 2026-04-19. |
+| Cerebro | DEPRECATED. Now called The Signal. Do not use. |
