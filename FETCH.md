@@ -16,9 +16,11 @@ At the start of every conversation, fetch and read the following files from the 
 2. https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/console/team.md
 3. https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/console/standards.md
 4. https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/console/terminology.md
+5. https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/console/deploy.md
 
 ## Cartridge (load based on project)
 - LESARUSS Platform: https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/cartridges/brands/lesaruss-project.md
+- BCPS (K12 Unlocked): https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/cartridges/brands/bcps.md
 
 Use WebFetch to retrieve each URL at conversation start. Apply all standards, terminology corrections, and team context from these files throughout the session.
 ```
