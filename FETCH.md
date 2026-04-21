@@ -17,6 +17,7 @@ At the start of every conversation, fetch and read the following files from the 
 3. https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/console/standards.md
 4. https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/console/terminology.md
 5. https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/console/deploy.md
+6. https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/console/compliance.md
 
 ## Cartridge (load based on project)
 - LESARUSS Platform: https://raw.githubusercontent.com/lesaruss/lesaruss-context/main/cartridges/brands/lesaruss-project.md
