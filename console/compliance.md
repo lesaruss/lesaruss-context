@@ -65,6 +65,24 @@ Any agent, station, or Cowork session operating on a LESARUSS surface reads this
 
 ---
 
+## Rule 4: Members first, then public, on every content publish
+
+**What it means.** Every LESARUSS content asset ships to paying members on lesaruss.ai first, and only moves to public distribution after a defined member window. "Content" covers anything a member or the public consumes as a deliverable: Universe strips, sitcom shorts, podcast episodes, newsletter issues, YouTube videos, social posts, music drops, archive releases, reports, and any future format.
+
+**Default window.** Members only on lesaruss.ai (SSO gated) for 7 to 14 days, then public release. Shorter or longer windows are allowed per asset type, but the default is 7 to 14 days and the sequence is never reversed.
+
+**What the member window does.**
+- Members see and react before the public. Their feedback, comments, flags, and reactions shape the work.
+- The window acts as a quality gate. Anything that surfaces an issue during the member window gets revised before public release.
+- The public version carries the locked member feedback plus the universal disclosure banner.
+- After the public window, the asset moves to the permanent archive in the Library with behind the scenes notes. The archive is the long term asset.
+
+**Scope.** Universal. Applies across every brand (Vegans Explore, Chester Is Cool, K12 Unlocked, ADA Unlocked, GeekFon Society, 111 Day Theory, Anime3000, Shamanic Resin, Mad Tings, The Blueprint, BCPS, and every future brand) and every asset type. When drafting any publish plan, default to members first. If someone proposes public first, flag it and ask why.
+
+**Why this rule exists.** Members pay for the window. The product they pay for is early access and influence on the work. Members first distribution also de risks publishing: issues surface while the audience is small and bought in, not in public. Every publish becomes a quality gate instead of a press release.
+
+---
+
 ## Where these rules sit in the stack
 
 - This file (`console/compliance.md`) is the universal rulebook. It is fetched at the start of every session by every agent with internet access to the Signal.
@@ -79,3 +97,4 @@ The older instruction is retired. This file wins until Sentinel and Sean update 
 ## Change log
 
 - 2026-04-21, v1.0. File created. Triggered by the Huddle pre-publish catch.
+- 2026-04-21, v1.1. Rule 4 added: members first, then public, on every content publish. Locked with Universe Bible v2.
