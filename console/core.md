@@ -2,11 +2,20 @@
 
 **Owner:** Rami + Victoria
 **Purpose:** Universal voice, values, and operating principles for every LESARUSS workspace
-**Updated:** 2026-04-17
+**Updated:** 2026-04-27
+
+---
+
+## Read this first
+
+Every LESARUSS station MUST also fetch `console/locked-rules.md` at session start. That file is the master index of every locked universal rule (output format, deploy, voice, accessibility, station parity). Any rule there overrides anything in auto-memory.
+
+Universal-fetch chain order: core.md, locked-rules.md, team.md, standards.md, terminology.md, deploy.md, compliance.md, then any cartridge.
 
 ---
 
 ## Brand Identity
+
 
 - **Name:** LESARUSS (all caps, always). Common transcription misspellings: Lasaris, Lasarus, Lisarus, Losarus, Osaris, Osiris, Licelra, Lazzara. Always correct to LESARUSS.
 - **Founder:** Sean A. Russell (never "Shawnee Russell," that is a voice transcription error)

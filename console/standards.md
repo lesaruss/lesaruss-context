@@ -56,7 +56,7 @@ Before creating ANY internal HTML page:
 
 **Top bar:** 62px fixed, backdrop blur. Left: LESARUSS.AI wordmark with pulsing dot. Right: 32px module icons + SR avatar.
 **Left drawer:** Pulsing toggle at left edge, opens 300px nav drawer. Links: Mission Control, Brand, Directory, Library, Playbooks, Modules, Settings.
-**Theme:** Auto only. Light 6AM-6PM, dark 6PM-6AM. No manual toggle.
+**Theme:** White-only universal default (LOCKED 2026-04-24). Every surface defaults to white background. Dark mode is an opt-in module the user enables, never a time-of-day auto-switch. Strip any auto-theme JavaScript on edit. See `console/locked-rules.md` section 2.1.
 **Footer:** LESARUSS.AI mark + nav links + copyright.
 
 ---
@@ -78,3 +78,10 @@ Before creating ANY internal HTML page:
 - Never use terminal for git push. Use Chrome MCP GitHub API.
 - All reports and briefs must be HTML (never .md as deliverable).
 - Every amended report needs a "What Changed" panel at top.
+- Every internal HTML doc auto-pushes to `public/<same-path>/` on `main` in the same turn (LOCKED 2026-04-24).
+- Every non-trivial public-page change ships to `public/v<N>/index.html` first for review, then is ported to the routed page (LOCKED 2026-04-24).
+- Every page must point to a next action. No dead-end pages. List pages need per-card CTAs (LOCKED 2026-04-24).
+- White background is the universal default. Dark mode is opt-in only (LOCKED 2026-04-24).
+- LESARUSS-owned brand pages do not include a claim rail. Claim rails appear only on third-party listings (LOCKED 2026-04-26).
+- Vercel-deployed commits are authored as `Sean A. Russell <contact@lesaruss.com>`. Never `claude@lesaruss.ai` (LOCKED 2026-04-25). See `console/deploy.md`.
+- For the full master index of every locked universal rule, see `console/locked-rules.md`.

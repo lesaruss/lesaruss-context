@@ -3,7 +3,11 @@
 All agents pushing code in the LESARUSS universe follow this workflow. No exceptions.
 
 ## The Golden Rule
-**Never push via terminal.** The sandbox cannot reach github.com directly (403 from proxy). All GitHub operations go through Chrome MCP's `javascript_tool` running on a github.com tab.
+
+**Never push from an unaided interactive terminal Sean has to type into.** Use one of the two supported paths.
+
+- **Path A: Sandbox git push.** Works for multi-file batches. The sandbox proxy blocks `api.github.com` (403) but allows `github.com` HTTPS (200). `git clone` and `git push` from `/tmp` succeed. This is the default fast path for repo edits like the `lesaruss-context` repo.
+- **Path B: Chrome MCP plus GitHub Contents API.** Required when the sandbox cannot reach the host or when uploading large binary files in chunks. Runs on a github.com tab via `javascript_tool`.
 
 ## Pipeline Sequence
 1. Push files to GitHub via Chrome MCP javascript_tool (GitHub Contents API)
@@ -90,6 +94,44 @@ When pushing through Chrome MCP, base64 can corrupt files:
 
 ## Supabase Migrations
 Use `execute_sql` from Supabase MCP. Works for CREATE TABLE, ALTER TABLE, INSERT, and other DDL. Split large migrations into logical sections to avoid timeouts.
+
+## Vercel Commit Author (LOCKED 2026-04-25)
+
+Every commit pushed to a Vercel-deployed repo MUST be authored as `Sean A. Russell <contact@lesaruss.com>`. A commit authored by `claude@lesaruss.ai` triggers an instant Vercel ERROR with empty build logs because `githubCommitAuthorLogin` is missing from the deploy meta. Symptom: build queues, fails immediately, no log output.
+
+### Sandbox git path
+On every fresh clone, before the first commit:
+```bash
+git config user.name "Sean A. Russell"
+git config user.email "contact@lesaruss.com"
+```
+
+### GitHub Contents API path
+Pass `committer` and `author` in the PUT body:
+```javascript
+const body = {
+  message: 'commit message',
+  content,
+  branch: 'main',
+  committer: { name: 'Sean A. Russell', email: 'contact@lesaruss.com' },
+  author:    { name: 'Sean A. Russell', email: 'contact@lesaruss.com' }
+};
+```
+
+## Sandbox Git Push (Path A reference)
+
+```bash
+cd /tmp && git clone https://USER:TOKEN@github.com/lesaruss/REPO.git
+cd REPO
+git config user.name "Sean A. Russell"
+git config user.email "contact@lesaruss.com"
+# edit files
+git add -A
+git commit -m "your message"
+git push origin main
+```
+
+The PAT is stored in auto-memory (`reference_github_pat.md`).
 
 ## Vercel Verification
 After pushing, check deployment status:

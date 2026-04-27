@@ -1,6 +1,12 @@
-# LESARUSS Internal Page Template — Pre-Flight Checklist
+# LESARUSS Internal Page Template - Pre-Flight Checklist
 
 **Locked 2026-04-15 by Sean.** If you are about to create or edit an internal LESARUSS HTML page (playbook, briefing, report, blueprint, mock, daily brief, ops doc, agenda, meeting notes, any member-facing internal page), you MUST read this file first.
+
+> **Station parity reminder:** before any internal HTML work, also confirm `console/locked-rules.md` was loaded this session. That file holds the universal output, deploy, and accessibility rules. Two LOCKED rules apply directly to anything you produce here:
+> - **HTML-only.** Never deliver a `.md` file as a finished playbook or report. Markdown is for working notes only.
+> - **Auto-push live.** Every internal HTML doc you create in the Project folder must be pushed to `public/<same-path>/` on `main` in the same turn it is created.
+>
+> If you are on V Station or any non-primary station and `console/locked-rules.md` is not in your context, stop and fetch it before continuing.
 
 ## Mandatory pre-flight
 
