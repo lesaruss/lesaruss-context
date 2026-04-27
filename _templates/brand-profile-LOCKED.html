@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  LESARUSS Brand Profile Template, LOCKED 2026-04-27
+  ============================================================================
+  Owner: Sean A. Russell
+  Canonical reference for every brand profile page in the LESARUSS universe.
+  Snapshot of the GeekFon Society brand profile, approved 2026-04-26.
+
+  WHERE IT LIVES:
+  - Routed prod component:   components/CampaignProfile.tsx (lesaruss-project)
+  - Data contract:           lib/campaigns.ts Campaign interface
+  - Per-brand data:          OVERLAYS in lib/campaigns.ts
+  - Brand catalog:           lib/brands.ts BRANDS array
+  - Live URL pattern:        lesaruss.ai/c/<slug>
+  - Live mock URL pattern:   lesaruss.ai/mocks/<dated>-<slug>-brand-profile.html
+
+  LOCKED ELEMENTS (do NOT change without Sean approval + rule update):
+  - Eight sections in this order: hero, threshold, prototype, transformation,
+    founder + brand structure, FAQ, universal CTA, footer.
+  - CSS variables: --lr-orange (#F69820), --lr-orange-text (#7d4a00),
+    --lr-text (#1a1a1a), --lr-text-75/50/30, --lr-surface (#fff).
+  - Hero: brand-color background, optional logo (heroAssetPath) or monogram.
+  - Threshold strip: 4 columns (progress %, backers, open since, status pill).
+  - Founder card is universal across every brand (Sean A. Russell).
+  - Brand Structure card is per-brand (3 role types).
+  - FAQ is universal (6 questions, locked copy in lib/campaigns.ts UNIVERSAL_FAQ).
+  - Status pill states: live, build, soon (draft), launched, archived.
+  - No claim rail on LESARUSS-owned brands (locked-rules.md rule 3.5).
+  - White default, no dark mode toggle on this surface.
+  - WCAG 2 AA pass on every contrast pair, ADA checker before any change.
+  - No em dashes anywhere.
+
+  WHAT VARIES PER BRAND (edit only here):
+  - Brand name, type label, mono code, hero gradient + asset
+  - Tagline, region, threshold numbers, prototype copy
+  - Three transformation cards (numbered 01, 02, 03)
+  - Brand structure intro + three role types
+  - Status state (drives CTA copy)
+
+  HOW TO ADD A NEW BRAND PROFILE:
+  1. Add the brand to BRANDS in lib/brands.ts (slug, mono, type, etc.)
+  2. Add an overlay to OVERLAYS in lib/campaigns.ts with per-brand fields
+  3. Push. The routed page at /c/<slug> picks it up automatically.
+  4. Do NOT modify components/CampaignProfile.tsx layout. Edit data only.
+  5. Any deviation from this template triggers a Sean approval cycle and a
+     console/locked-rules.md update. Layout drift is treated as a parity bug.
+
+  Single file. White default. WCAG 2 AA. No em dashes.
+  ============================================================================
+-->
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand Profile Template (LOCKED), LESARUSS.AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lr-bg: #f5f5f5;
+    --lr-surface: #ffffff;
+    --lr-surface2: #fafafa;
+    --lr-border: rgba(0,0,0,0.08);
+    --lr-border-strong: rgba(0,0,0,0.18);
+    --lr-text: #1a1a1a;
+    --lr-text-75: rgba(26,26,26,0.80);
+    --lr-text-50: rgba(26,26,26,0.66);
+    --lr-text-30: rgba(26,26,26,0.40);
+    --lr-orange: #F69820;
+    --lr-orange-text: #7d4a00;
+    --lr-card-hover: #f7f7f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #e6e6e6; color: var(--lr-text);
+    font-weight: 400; line-height: 1.6;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+  :focus-visible { outline: 3px solid var(--lr-orange); outline-offset: 3px; }
+
+  /* ==================== Mock Chrome (viewport switcher) ==================== */
+  .mock-bar {
+    position: sticky; top: 0; z-index: 1000;
+    background: #1a1a1a; color: #fff;
+    padding: 12px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    border-bottom: 4px solid var(--lr-orange);
+    flex-wrap: wrap;
+  }
+  .mock-bar .label {
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--lr-orange);
+  }
+  .mock-bar .vp-row {
+    display: flex; gap: 6px;
+    background: rgba(255,255,255,0.06);
+    padding: 4px; border-radius: 6px;
+  }
+  .vp-btn {
+    background: transparent; border: none; color: rgba(255,255,255,0.85);
+    font-family: inherit;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.12em;
+    padding: 6px 14px; border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .vp-btn:hover { color: #fff; }
+  .vp-btn.active { background: var(--lr-orange); color: #1a1a1a; }
+  .panel-handle {
+    background: var(--lr-orange); color: #1a1a1a;
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    padding: 5px 14px; border-radius: 99px;
+    display: inline-block;
+  }
+  .mock-stage { padding: 28px 16px 80px; }
+  .panel {
+    max-width: 1280px; margin: 0 auto 28px;
+    background: var(--lr-surface);
+    border: 1px solid var(--lr-border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 24px 56px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.05);
+    transition: max-width 0.18s ease;
+  }
+  .panel-head {
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--lr-border);
+    background: var(--lr-surface2);
+    display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap;
+  }
+  .panel-head .num {
+    background: var(--lr-orange); color: #1a1a1a;
+    font-size: 10px; font-weight: 900;
+    padding: 4px 10px; border-radius: 99px;
+    text-transform: uppercase; letter-spacing: 0.14em;
+  }
+  .panel-head .title {
+    font-size: 14px; font-weight: 800;
+    color: var(--lr-text); letter-spacing: 0.04em;
+  }
+  .panel-head .sub {
+    font-size: 12px; color: var(--lr-text-75);
+    font-weight: 400; flex: 1; min-width: 200px;
+  }
+  .panel-body { padding: 0; }
+
+  body[data-vp="tablet"] .panel { max-width: 820px; }
+  body[data-vp="mobile"] .panel { max-width: 420px; }
+  body[data-vp="mobile"] .vp-aware-grid { grid-template-columns: 1fr !important; }
+  body[data-vp="tablet"] .vp-aware-grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
+  body[data-vp="mobile"] .vp-aware-grid-3 { grid-template-columns: 1fr !important; }
+  body[data-vp="mobile"] .hero-grid { grid-template-columns: 1fr !important; }
+  body[data-vp="mobile"] .nav-link-group { display: none !important; }
+  body[data-vp="mobile"] .nav-mobile-toggle { display: inline-flex !important; }
+
+  /* ==================== Profile Page Frame ==================== */
+  .pp-nav {
+    height: 62px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px;
+    background: rgba(255,255,255,0.97);
+    border-bottom: 1px solid var(--lr-border);
+    backdrop-filter: blur(10px);
+  }
+  .pp-wordmark {
+    font-size: 16px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--lr-text);
+  }
+  @keyframes dotPulse {
+    0%   { opacity: 1;    transform: scale(1); }
+    50%  { opacity: 0.35; transform: scale(1.3); }
+    100% { opacity: 1;    transform: scale(1); }
+  }
+  .dot { color: var(--lr-orange); display: inline-block; animation: dotPulse 2s ease-in-out infinite; }
+  .nav-link-group { display: flex; gap: 22px; }
+  .nav-link-group a {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--lr-text-75);
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-link-group a:hover { color: var(--lr-orange-text); border-color: var(--lr-orange); }
+  .nav-link-group a.active { color: var(--lr-text); border-color: var(--lr-text); }
+  .nav-mobile-toggle {
+    display: none;
+    width: 36px; height: 36px;
+    background: transparent;
+    border: 1px solid var(--lr-border);
+    border-radius: 4px;
+    cursor: pointer;
+    align-items: center; justify-content: center;
+  }
+  .nav-mobile-toggle .bars { display: flex; flex-direction: column; gap: 3px; }
+  .nav-mobile-toggle .bars span {
+    display: block; width: 16px; height: 2px; background: var(--lr-text);
+  }
+  .pp-cta {
+    background: var(--lr-orange); color: #1a1a1a;
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 9px 16px; border-radius: 4px;
+    border: none; cursor: pointer;
+  }
+
+  /* ==================== HERO (Profile) ==================== */
+  .pp-hero {
+    background: var(--lr-surface);
+    border-bottom: 1px solid var(--lr-border);
+    padding: 64px 40px 48px;
+  }
+  .hero-grid {
+    max-width: 1180px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 56px; align-items: center;
+  }
+  .pp-eyebrow {
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--lr-orange-text);
+    margin-bottom: 14px;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .pp-eyebrow .pip {
+    width: 7px; height: 7px; background: var(--lr-orange);
+    border-radius: 50%; display: inline-block;
+  }
+  h1.pp-title {
+    font-size: clamp(38px, 5.4vw, 64px);
+    font-weight: 900; line-height: 0.98;
+    letter-spacing: -0.02em; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .pp-tagline {
+    font-size: 19px; font-weight: 400;
+    color: var(--lr-text-75); line-height: 1.55;
+    margin-bottom: 26px; max-width: 480px;
+  }
+  .pp-meta {
+    display: flex; gap: 18px; flex-wrap: wrap;
+    margin-bottom: 30px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--lr-text-50);
+  }
+  .pp-meta strong { color: var(--lr-text); font-weight: 800; }
+  .pp-cta-row {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn-primary {
+    background: var(--lr-orange); color: #1a1a1a;
+    font-size: 13px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 14px 22px; border-radius: 4px;
+    border: none; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-primary svg { width: 14px; height: 14px; }
+  .btn-secondary {
+    background: transparent; color: var(--lr-text);
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    padding: 12px 18px; border-radius: 4px;
+    border: 1px solid var(--lr-border-strong); cursor: pointer;
+  }
+  .btn-secondary:hover { border-color: var(--lr-orange); color: var(--lr-orange-text); }
+
+  /* Hero image: GeekFon brand gradient + logo */
+  .pp-hero-image {
+    aspect-ratio: 4 / 3; border-radius: 8px;
+    overflow: hidden; position: relative;
+    border: 1px solid var(--lr-border);
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #1a1060 0%, #6940d0 100%);
+  }
+  .pp-hero-image::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 50%;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 100%);
+    pointer-events: none;
+  }
+  .pp-hero-image .ph-name, .pp-hero-image .ph-mark, .pp-hero-image .placeholder-tag { position: relative; z-index: 1; }
+  .pp-hero-image .ph-mark {
+    width: 58%; max-width: 320px; height: auto;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.35));
+  }
+  .pp-hero-image .ph-name {
+    position: absolute; bottom: 18px; left: 22px;
+    color: rgba(255,255,255,0.95);
+    font-size: 12px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.18em;
+  }
+  .pp-hero-image .placeholder-tag {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(0,0,0,0.55); color: #fff;
+    font-size: 9px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    padding: 5px 10px; border-radius: 99px;
+    backdrop-filter: blur(4px);
+  }
+
+  /* ==================== Threshold Panel ==================== */
+  .threshold-strip {
+    background: var(--lr-surface2);
+    border-bottom: 1px solid var(--lr-border);
+    padding: 32px 40px;
+  }
+  .threshold-grid {
+    max-width: 1180px; margin: 0 auto;
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 36px;
+    align-items: center;
+  }
+  .th-label {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.20em;
+    color: var(--lr-text-50); margin-bottom: 8px;
+  }
+  .th-num {
+    font-size: 28px; font-weight: 900;
+    color: var(--lr-text); letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .th-num span { font-size: 14px; color: var(--lr-text-50); font-weight: 700; }
+  .progress-track {
+    width: 100%; height: 10px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 99px; overflow: hidden;
+    margin-top: 10px;
+  }
+  .progress-fill {
+    height: 100%; background: var(--lr-orange);
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.2,0.8,0.2,1);
+  }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    padding: 6px 12px; border-radius: 99px;
+    border: 1px solid var(--lr-border);
+  }
+  .status-pill.build { background: #fff4e0; color: #7d4a00; border-color: #f3d99a; }
+  .status-pill .led { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .status-pill.build .led { background: #e58e00; }
+
+  /* ==================== Sections ==================== */
+  .section {
+    max-width: 1180px; margin: 0 auto;
+    padding: 56px 40px;
+  }
+  .section + .section { padding-top: 0; }
+  h2.section-title {
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--lr-orange-text); margin-bottom: 18px;
+  }
+  h3.section-h {
+    font-size: 26px; font-weight: 900;
+    line-height: 1.15; letter-spacing: -0.01em;
+    color: var(--lr-text); margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  /* Prototype embed */
+  .prototype-wrap {
+    aspect-ratio: 16 / 9; border-radius: 8px;
+    background: linear-gradient(135deg, #1a1060 0%, #2a1880 60%, #6940d0 100%);
+    border: 1px solid var(--lr-border);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 14px;
+    color: rgba(255,255,255,0.85);
+    position: relative; overflow: hidden;
+  }
+  .prototype-wrap .play-disc {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--lr-orange);
+    display: flex; align-items: center; justify-content: center;
+    color: #1a1a1a;
+  }
+  .prototype-wrap .play-disc svg { width: 22px; height: 22px; margin-left: 3px; }
+  .prototype-wrap .label {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.20em;
+    color: rgba(255,255,255,0.78);
+  }
+  .prototype-wrap .body {
+    font-size: 14px; font-weight: 600;
+    color: rgba(255,255,255,0.92); max-width: 360px;
+    text-align: center;
+  }
+
+  /* Transformation bullets */
+  .transform-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .transform-card {
+    background: var(--lr-surface);
+    border: 1px solid var(--lr-border);
+    border-left: 3px solid var(--lr-orange);
+    border-radius: 4px;
+    padding: 22px 22px;
+  }
+  .transform-card .num {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.20em;
+    color: var(--lr-orange-text); margin-bottom: 10px;
+  }
+  .transform-card h4 {
+    font-size: 16px; font-weight: 800; color: var(--lr-text);
+    margin-bottom: 8px; line-height: 1.3;
+  }
+  .transform-card p {
+    font-size: 14px; color: var(--lr-text-75);
+    line-height: 1.6; margin: 0;
+  }
+
+  /* Founder + Structure block */
+  .behind-grid {
+    display: grid; grid-template-columns: 1fr 1.2fr;
+    gap: 22px; align-items: stretch;
+  }
+  .founder-block, .structure-block {
+    background: var(--lr-surface);
+    border: 1px solid var(--lr-border);
+    border-radius: 6px;
+    padding: 26px 26px;
+  }
+  .founder-block { border-left: 3px solid var(--lr-orange); }
+  .founder-row { display: flex; gap: 14px; align-items: center; margin-bottom: 16px; }
+  .founder-avatar {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #555 100%);
+    color: #fff; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 900;
+    letter-spacing: 0.05em;
+  }
+  .founder-role {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--lr-orange-text); margin-bottom: 4px;
+  }
+  .founder-name {
+    font-size: 18px; font-weight: 900;
+    color: var(--lr-text); letter-spacing: -0.01em;
+  }
+  .founder-bio {
+    font-size: 14px; color: var(--lr-text-75);
+    line-height: 1.65; margin: 0;
+  }
+  .structure-label {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.20em;
+    color: var(--lr-orange-text); margin-bottom: 10px;
+  }
+  .structure-intro {
+    font-size: 14px; color: var(--lr-text-75);
+    line-height: 1.6; margin: 0 0 18px;
+  }
+  .structure-roles { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .structure-roles li {
+    padding: 12px 0; border-top: 1px solid var(--lr-border);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .structure-roles li:first-child { border-top: none; padding-top: 0; }
+  .role-name {
+    font-size: 13px; font-weight: 800;
+    color: var(--lr-text); letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .role-line {
+    font-size: 13px; color: var(--lr-text-75);
+    line-height: 1.55;
+  }
+  body[data-vp="mobile"] .behind-grid,
+  body[data-vp="tablet"] .behind-grid { grid-template-columns: 1fr !important; }
+
+  /* FAQ */
+  .faq-list { display: flex; flex-direction: column; gap: 10px; }
+  .faq-item {
+    background: var(--lr-surface);
+    border: 1px solid var(--lr-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .faq-item summary {
+    list-style: none; cursor: pointer;
+    padding: 18px 22px;
+    font-size: 14px; font-weight: 700;
+    color: var(--lr-text);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: "+"; font-weight: 700;
+    color: var(--lr-orange-text);
+    font-size: 22px; line-height: 1;
+    transition: transform 0.2s;
+  }
+  .faq-item[open] summary::after { transform: rotate(45deg); }
+  .faq-item .a {
+    padding: 0 22px 18px;
+    font-size: 14px; color: var(--lr-text-75);
+    line-height: 1.65;
+  }
+
+  /* Universal CTA repeat */
+  .universal-cta {
+    background: #1a1a1a; color: #fff;
+    border-radius: 8px;
+    padding: 44px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 28px; flex-wrap: wrap;
+  }
+  .universal-cta h3 {
+    font-size: 24px; font-weight: 900;
+    line-height: 1.15; letter-spacing: -0.01em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .universal-cta p {
+    font-size: 14px; color: rgba(255,255,255,0.85);
+    line-height: 1.55; max-width: 520px;
+  }
+
+  /* ==================== Claim rail ==================== */
+  .claim-rail {
+    background: linear-gradient(135deg, #fff7e8 0%, #ffe8c2 100%);
+    border: 1px solid #f3d99a;
+    border-radius: 8px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 28px;
+    align-items: center;
+  }
+  .claim-rail .lock-icon {
+    width: 52px; height: 52px;
+    background: var(--lr-orange);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #1a1a1a; flex-shrink: 0;
+  }
+  .claim-rail .lock-icon svg { width: 22px; height: 22px; }
+  .claim-rail .copy .label {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.22em;
+    color: var(--lr-orange-text); margin-bottom: 6px;
+  }
+  .claim-rail .copy h4 {
+    font-size: 18px; font-weight: 800;
+    color: var(--lr-text); margin-bottom: 6px;
+    text-transform: uppercase; letter-spacing: 0.01em;
+  }
+  .claim-rail .copy p {
+    font-size: 13px; color: var(--lr-text-75);
+    margin: 0; line-height: 1.55;
+  }
+  .claim-rail .copy strong { color: var(--lr-text); font-weight: 800; }
+  .claim-rail .price-stack {
+    text-align: right; min-width: 200px;
+  }
+  .claim-rail .price-stack .now {
+    font-size: 28px; font-weight: 900; color: var(--lr-text);
+    letter-spacing: -0.02em; line-height: 1;
+  }
+  .claim-rail .price-stack .now span { font-size: 14px; color: var(--lr-text-50); font-weight: 600; margin-left: 4px; }
+  .claim-rail .price-stack .upgrade {
+    font-size: 11px; color: var(--lr-text-75);
+    margin-top: 6px; line-height: 1.4;
+  }
+  .claim-rail .price-stack .upgrade strong { color: var(--lr-text); font-weight: 800; }
+  .claim-rail .btn-primary { margin-top: 10px; width: 100%; justify-content: center; }
+  body[data-vp="mobile"] .claim-rail {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  body[data-vp="mobile"] .claim-rail .price-stack { text-align: center; }
+  body[data-vp="mobile"] .claim-rail .copy h4 { margin-top: 8px; }
+
+  /* Footer */
+  .pp-foot {
+    border-top: 1px solid var(--lr-border);
+    padding: 28px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 14px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--lr-text-50);
+  }
+  .pp-foot a:hover { color: var(--lr-orange-text); }
+
+  /* responsive within profile */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr !important; gap: 32px; }
+    .threshold-grid { grid-template-columns: 1fr 1fr !important; gap: 22px; }
+    .transform-grid { grid-template-columns: 1fr !important; }
+    .pp-hero, .threshold-strip, .section { padding-left: 22px; padding-right: 22px; }
+  }
+  @media (max-width: 540px) {
+    .threshold-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body data-vp="desktop">
+
+<!-- ============= MOCK CHROME ============= -->
+<div class="mock-bar" role="region" aria-label="Mock viewport switcher">
+  <div>
+    <div class="label">LESARUSS Brand Profile Template - LOCKED 2026-04-27</div>
+  </div>
+  <div class="vp-row" role="tablist" aria-label="Viewport size">
+    <button class="vp-btn active" data-vp="desktop" type="button" aria-selected="true">Desktop</button>
+    <button class="vp-btn" data-vp="tablet" type="button" aria-selected="false">Tablet</button>
+    <button class="vp-btn" data-vp="mobile" type="button" aria-selected="false">Mobile</button>
+  </div>
+  <span class="panel-handle" aria-hidden="true">Scroll &darr;</span>
+</div>
+
+<div class="mock-stage">
+
+  <!-- ============================================================
+       Brand Profile, GeekFon Society
+       Mirrors the Section 2 mock approved 2026-04-25, content swapped for GeekFon.
+       ============================================================ -->
+  <section class="panel" aria-label="GeekFon Society brand profile">
+    <div class="panel-head">
+      <span class="num">GF</span>
+      <span class="title">Brand Profile, GeekFon Society</span>
+      <span class="sub">Universal Directory format, brand 1 of 8. Eight sections per Spec v1.0 (hero, threshold, prototype, transformation, founders, FAQ, claim, footer). Status: Open, Pledging.</span>
+    </div>
+    <div class="panel-body">
+
+      <!-- Frame nav -->
+      <nav class="pp-nav" role="navigation" aria-label="Profile page nav">
+        <a href="/" class="pp-wordmark">LESARUSS<span class="dot" aria-hidden="true">.</span>AI</a>
+        <div class="nav-link-group">
+          <a href="/about">About</a>
+          <a href="/case-studies">Case Studies</a>
+          <a href="/media">Media</a>
+          <a href="/brands" class="active">Brands</a>
+          <a href="/contact">Contact</a>
+        </div>
+        <button class="nav-mobile-toggle" type="button" aria-label="Open menu">
+          <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+        <a href="/intake" class="pp-cta" aria-label="Enter or login">Enter / Login &rarr;</a>
+      </nav>
+
+      <!-- HERO -->
+      <section class="pp-hero" aria-label="Brand hero">
+        <div class="hero-grid">
+          <div>
+            <div class="pp-eyebrow"><span class="pip" aria-hidden="true"></span> Brand Profile, LESARUSS Universe</div>
+            <h1 class="pp-title">GeekFon<br>Society<span class="dot" aria-hidden="true">.</span></h1>
+            <p class="pp-tagline">An animated music universe with sub-labels for every genre. Characters who write the songs, members who shape the world, a radio that plays it all. Pledge any amount, fund the build, watch the line move.</p>
+            <div class="pp-meta">
+              <span><strong>Type</strong> Animated Music Universe</span>
+              <span><strong>Region</strong> Global</span>
+              <span><strong>Campaign</strong> Open-ended, no deadline</span>
+            </div>
+            <div class="pp-cta-row">
+              <a href="#" class="btn-primary">
+                Pledge &amp; move the line
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+              </a>
+              <button class="btn-secondary" type="button">Share this campaign</button>
+            </div>
+          </div>
+          <div class="pp-hero-image" role="img" aria-label="GeekFon Society logo on the brand color">
+            <span class="placeholder-tag">Brand asset</span>
+            <img class="ph-mark" src="/geekfon-logo.png" alt="GeekFon Society logo">
+            <span class="ph-name">GeekFon Society</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- THRESHOLD -->
+      <section class="threshold-strip" aria-label="Funding threshold panel">
+        <div class="threshold-grid">
+          <div>
+            <div class="th-label">Funding progress</div>
+            <div class="th-num">18<span>% to threshold</span></div>
+            <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="18" aria-label="Funding progress, 18 percent">
+              <div class="progress-fill" style="width: 18%;"></div>
+            </div>
+          </div>
+          <div>
+            <div class="th-label">Backers</div>
+            <div class="th-num">184<span>/ 1,000</span></div>
+          </div>
+          <div>
+            <div class="th-label">Open since</div>
+            <div class="th-num">Apr<span>2026</span></div>
+          </div>
+          <div>
+            <div class="th-label">Status</div>
+            <div style="margin-top: 4px;">
+              <span class="status-pill build"><span class="led" aria-hidden="true"></span> Open, Pledging</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROTOTYPE -->
+      <section class="section" aria-labelledby="proto-h">
+        <h2 class="section-title" id="proto-h">3. Working Prototype</h2>
+        <h3 class="section-h">Hear the universe before you back it.</h3>
+        <div class="prototype-wrap" role="img" aria-label="Prototype demo placeholder, video plays in production">
+          <div class="play-disc" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="label">Prototype demo</div>
+          <div class="body">A walkthrough of the GeekFon Radio stream, the Shamanic Resin debut with Cat Dance and Momo, and a first listen at the Mad Tings line. 3 minutes.</div>
+        </div>
+      </section>
+
+      <!-- TRANSFORMATION -->
+      <section class="section" aria-labelledby="trans-h">
+        <h2 class="section-title" id="trans-h">4. What you are backing</h2>
+        <h3 class="section-h">Who you become when this hits the line.</h3>
+        <div class="transform-grid vp-aware-grid-3">
+          <div class="transform-card">
+            <div class="num">01</div>
+            <h4>The fan who finally finds a music universe wide enough to live in.</h4>
+            <p>Animated characters with full discographies, sub-labels for every genre, and a radio that knows what you actually want to hear next.</p>
+          </div>
+          <div class="transform-card">
+            <div class="num">02</div>
+            <h4>The creator whose taste gets a stage and an audience.</h4>
+            <p>Producers, writers, animators, and voice artists plug into a working studio with distribution, a community, and a brand around them.</p>
+          </div>
+          <div class="transform-card">
+            <div class="num">03</div>
+            <h4>The early member whose voice shapes the canon.</h4>
+            <p>Founding pledgers help name the next sub-label, vote on which character ships first, and stay flagged in the credits for life.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOUNDER + BRAND STRUCTURE -->
+      <section class="section" aria-labelledby="behind-h">
+        <h2 class="section-title" id="behind-h">5. Behind the brand</h2>
+        <h3 class="section-h">Built by one founder, run by a defined structure.</h3>
+
+        <div class="behind-grid">
+          <article class="founder-block">
+            <div class="founder-row">
+              <div class="founder-avatar" aria-hidden="true">SR</div>
+              <div>
+                <div class="founder-role">Founder, LESARUSS Universe</div>
+                <div class="founder-name">Sean A. Russell</div>
+              </div>
+            </div>
+            <p class="founder-bio">Builder of LESARUSS, the operating system underneath every brand here. Engineer by trade, district webmaster by past life, accessibility-first and B Corp-bound by intent. Picks the brands, picks the GMs, walks the line in public until each one stands on its own.</p>
+          </article>
+
+          <article class="structure-block">
+            <div class="structure-label">The GeekFon Society structure</div>
+            <p class="structure-intro">Each brand under LESARUSS runs on a defined structure of roles, not a list of names. For GeekFon Society, three role types carry the brand:</p>
+            <ul class="structure-roles">
+              <li>
+                <span class="role-name">Sub-Label Heads</span>
+                <span class="role-line">Run the genre layer. One per sub-label (Shamanic Resin, Mad Tings, and the labels still to come). Hold the artists, releases, and the sound.</span>
+              </li>
+              <li>
+                <span class="role-name">Character Producers</span>
+                <span class="role-line">Build the animated cast and the music they make. Story, song, and voice all under one role. They keep the universe canon.</span>
+              </li>
+              <li>
+                <span class="role-name">Society Members</span>
+                <span class="role-line">The audience that participates as fans, not customers. Vote on releases, request sets on GeekFon Radio, shape what the universe sounds like next.</span>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section" aria-labelledby="faq-h">
+        <h2 class="section-title" id="faq-h">6. Frequently asked</h2>
+        <h3 class="section-h">The questions worth answering.</h3>
+        <div class="faq-list">
+          <details class="faq-item" open>
+            <summary>Is there a deadline? What if we do not hit the threshold?</summary>
+            <div class="a">There is no deadline. The campaign runs continuously until the threshold is met. If we have not hit it yet, the line keeps moving from where it last left off, never resets. We are not running a clock, we are raising what it takes to launch this brand the right way. Two months, two years, ten years, it is what it is. The day we hit the threshold is the day this brand goes fully live.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Will I get refunded if the threshold is never met?</summary>
+            <div class="a">No. Pledges are not held in escrow. The moment you back this brand, your dollars go directly into building it, the studio, the characters, the radio, the next release. By backing, you are funding the build, not waiting on it.</div>
+          </details>
+          <details class="faq-item">
+            <summary>How do I track where my pledge goes?</summary>
+            <div class="a">Once you pledge, a campaign tracker pins to your Mission Control. You see the line move in real time, the milestones the team is hitting, and where the funds are deploying inside the brand. You always know what your dollars did.</div>
+          </details>
+          <details class="faq-item">
+            <summary>What do I get when this brand officially launches?</summary>
+            <div class="a">A founding role inside GeekFon Society, a permanent access tile in your Mission Control, GeekFon Radio in your sidebar, and the head of the line for whatever drops first. Founding pledges count differently than late ones.</div>
+          </details>
+          <details class="faq-item">
+            <summary>Do I need a separate account for each brand I back?</summary>
+            <div class="a">No. Backing a brand adds it as a tile inside your existing Mission Control. One identity across every brand in the universe.</div>
+          </details>
+          <details class="faq-item">
+            <summary>How is this different from a Kickstarter?</summary>
+            <div class="a">Kickstarter is all-or-nothing on a deadline. We are neither. There is no deadline, every pledge funds the build the day it lands, and backing here puts you inside an operating system that connects this brand to seven others under the same roof.</div>
+          </details>
+        </div>
+      </section>
+
+      <!-- CLAIM RAIL omitted: GeekFon Society is a LESARUSS-owned brand. Claim section only appears on third-party directory profiles. -->
+
+      <!-- UNIVERSAL CTA REPEAT -->
+      <section class="section" aria-labelledby="uni-h">
+        <div class="universal-cta" role="region" aria-labelledby="uni-h">
+          <div>
+            <h3 id="uni-h">Pledge now. Move the line.</h3>
+            <p>No deadline, no countdown, no refund. The campaign runs until the threshold is met, and every pledge funds the build the day it lands. Pledge once, watch the line move on your Mission Control tracker until launch.</p>
+          </div>
+          <a href="#" class="btn-primary">
+            Pledge &amp; track in Mission Control
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="pp-foot">
+        <span>LESARUSS<span class="dot" aria-hidden="true">.</span>AI</span>
+        <span>Brand 1 of 8 - GeekFon Society - Profile spec v1.0</span>
+      </footer>
+
+    </div>
+  </section>
+
+</div>
+
+<script>
+  (function () {
+    var body = document.body;
+    var btns = document.querySelectorAll('.vp-btn');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        btns.forEach(function (x) { x.classList.remove('active'); x.setAttribute('aria-selected', 'false'); });
+        b.classList.add('active');
+        b.setAttribute('aria-selected', 'true');
+        body.setAttribute('data-vp', b.getAttribute('data-vp'));
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

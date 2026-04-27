@@ -108,6 +108,22 @@ Every HTML mock includes a desktop/tablet/mobile viewport switcher with an orang
 
 **How to apply:** Use the mock-shell partial bundled with the locked template. Do not omit the switcher even on small mocks.
 
+### 2.5 Brand Profile template locked (LOCKED 2026-04-27)
+
+The Brand Profile page (lesaruss.ai/c/<slug>) layout is locked. Eight sections in fixed order: hero, threshold, prototype, transformation, founder + brand structure, FAQ, universal CTA, footer. CSS variables, color tokens, status pill states, and section roles are fixed. The Founder card is universal across every brand (Sean A. Russell). The FAQ is universal (six questions, copy locked in `lib/campaigns.ts` UNIVERSAL_FAQ). The Brand Structure card is per-brand with exactly three role types.
+
+**Why:** Visual consistency across all eight brands. Per-brand drift on a profile page costs trust and breaks the universe-as-one-system promise. The funding mechanic (continuous, no deadline, no escrow) only reads cleanly when the layout is identical from brand to brand.
+
+**How to apply:**
+- Canonical reference: `_templates/brand-profile-LOCKED.html` in this repo.
+- Routed implementation: `components/CampaignProfile.tsx` in `lesaruss-project`.
+- Data contract: `Campaign` interface in `lib/campaigns.ts`.
+- To add a new brand profile: add to `BRANDS` in `lib/brands.ts`, add an overlay to `OVERLAYS` in `lib/campaigns.ts`. Do NOT modify the CampaignProfile component layout.
+- Optional logo asset on the hero: set `heroAssetPath` in the overlay; otherwise the monogram + brand-color gradient fallback renders.
+- Status states drive CTA copy: active = "Pledge & move the line", draft = "Notify me", launched = "Enter the brand", archived = "Read the case study".
+- Pairs with rule 3.5 (no claim rail on LESARUSS-owned brands).
+- Any layout change requires explicit Sean approval and an update to this rule plus the locked HTML template.
+
 ---
 
 ## 3. Voice and content
@@ -248,4 +264,4 @@ When a new universal rule is locked, it MUST be written to this repo, not only t
 - 2026-04-27, v1.1. Added rule 1.6 (Always share a viewable link + a clear next step). Triggered by recurring chat-output drift where Cowork messages closed without a link or a concrete next step.
 - 2026-04-27, v1.2. Added rule 5.3 Memory routing protocol so future LOCKED universal rules land here automatically instead of in per-device auto-memory.
 - 2026-04-27, v1.3. Added rule 4.4 (Deploy from the actual repo, not the working folder) plus the domain-to-repo-to-path map. Triggered by 2026-04-27 second-pass push where an agent burned ten minutes cloning the wrong repo because lesaruss.ai (deployed from lesaruss-project) was assumed to deploy from lesaruss-ai.
-
+- 2026-04-27, v1.4. Added rule 2.5 (Brand Profile template locked). Triggered by Sean lock-in after GeekFon Society profile shipped and the eight-brand rollout was about to begin. Pairs with new `_templates/brand-profile-LOCKED.html` artifact.
