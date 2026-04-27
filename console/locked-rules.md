@@ -220,6 +220,27 @@ When a terminal step is unavoidable, give the full command in a single copy-read
 - Verify via Vercel MCP `list_deployments` and a `curl -sI` against the live URL.
 - If you find the working folder out of sync with the repo, do not silently sync it back. Flag the drift to Sean.
 
+### 4.5 Persistent deploy clones live at ~/Code/&lt;repo&gt; (LOCKED 2026-04-27)
+
+Every station keeps a real `git clone` of every active deploy repo at `~/Code/<repo>` on the host filesystem. That clone is the working copy for daily edits, scheduled-task pushes, and long-running agent work. The `/tmp/<short>` clone pattern from rule 4.2 is reserved for one-off operations or when `~/Code/<repo>` is not yet provisioned on a fresh station. **Never edit files in a Google Drive working folder and assume they will deploy.** Drive is a journal, not a deploy source.
+
+**Why:** Three copies of the same file (Drive, Documents working folder, GitHub) silently drift, force a reconciliation step on every push, and cost cycles fixing rather than shipping. The 2026-04-27 HQ-promotion push hit this directly, and the same-day audit found 66 logical-path overlaps between Drive and `lesaruss-project` with em-dash fixes that had been applied in Drive but never propagated to the deployed branch. Consolidating to one canonical source per repo eliminates the drift surface.
+
+**Domain to clone path map (canonical):**
+
+| Repo | Local clone path |
+|---|---|
+| lesaruss-ai | `~/Code/lesaruss-ai` |
+| lesaruss-project | `~/Code/lesaruss-project` |
+| lesaruss-context | `~/Code/lesaruss-context` |
+
+**How to apply:**
+- On any new station, run `mkdir -p ~/Code` once, then `git clone https://github.com/lesaruss/<repo>.git ~/Code/<repo>` for each active deploy repo.
+- Inside each clone, set local identity: `git config user.name "Sean A. Russell"` and `git config user.email "contact@lesaruss.com"` per rule 4.1.
+- For daily work, edit files in `~/Code/<repo>` directly. Commit + push from there. Vercel auto-deploys.
+- For ephemeral agent ops where a fresh tree is preferable, use the `/tmp/<short>` clone pattern from rule 4.2.
+- The Google Drive `LESARUSS Project/` folder is being phased out as a deploy source. Treat any HTML or JSON file there as suspect until rule 4.5 has landed on every active station.
+
 ---
 
 ## 5. Station parity
@@ -265,3 +286,4 @@ When a new universal rule is locked, it MUST be written to this repo, not only t
 - 2026-04-27, v1.2. Added rule 5.3 Memory routing protocol so future LOCKED universal rules land here automatically instead of in per-device auto-memory.
 - 2026-04-27, v1.3. Added rule 4.4 (Deploy from the actual repo, not the working folder) plus the domain-to-repo-to-path map. Triggered by 2026-04-27 second-pass push where an agent burned ten minutes cloning the wrong repo because lesaruss.ai (deployed from lesaruss-project) was assumed to deploy from lesaruss-ai.
 - 2026-04-27, v1.4. Added rule 2.5 (Brand Profile template locked). Triggered by Sean lock-in after GeekFon Society profile shipped and the eight-brand rollout was about to begin. Pairs with new `_templates/brand-profile-LOCKED.html` artifact.
+- 2026-04-27, v1.5. Added rule 4.5 (Persistent deploy clones live at `~/Code/<repo>`). Triggered by file architecture migration Phase 1, which surfaced 66 logical-path overlaps between Drive and `lesaruss-project` (including 20 em-dash fixes that had been applied in Drive but never propagated to the deployed branch). Pairs with the migration playbook at `hq.lesaruss.ai/playbooks/file-architecture-migration-playbook`.
