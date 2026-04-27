@@ -58,6 +58,20 @@ Every page, public or internal, must clearly point the reader to a next action. 
 
 **How to apply:** Before publishing any page, identify the next action. If you cannot, the page is incomplete. List pages need per-card CTAs in addition to the top-level CTA.
 
+### 1.6 Always share a viewable link + a clear next step (LOCKED 2026-04-27)
+
+Every wrap-up message after a completed process (deploy, push, file write, mock build, anything Sean might want to look at) MUST contain a direct clickable link to the result and an explicit next step framed as a concrete option (A or B). Never end with "go check it" without a URL. Never end with "let me know" or "thoughts?" without options.
+
+**Why:** Sean is running 8 brands. If he has to figure out what URL to open or what decision to make next, that is friction every turn. He has flagged this as recurring drift more than once. The rule applies to every Cowork chat output, not just to pages.
+
+**How to apply:**
+- Deploy result: live URL as a markdown link, plus "open it, then say X or Y."
+- File creation: `computer://` link, plus "open it, reply with edits or approval."
+- Mock pushed: mock URL, plus "review and approve or list changes."
+- Multi-brand pattern work: link to ONE representative URL, plus a yes/no on rolling the pattern across the rest.
+- Never ask open-ended "what do you think" without a concrete A/B option attached.
+- Never list multiple completed surfaces without picking THE ONE Sean should open first.
+
 ---
 
 ## 2. Visual and accessibility
@@ -191,3 +205,4 @@ Every LESARUSS station runs the same plugin and skill set: `lesaruss-internal-pa
 ## Change log
 
 - 2026-04-27, v1.0. File created. Triggered by V Station producing an MD playbook with no awareness of the auto-push or HTML-only rules. Migrated 14 rules from per-device auto-memory into the repo so they apply on every station.
+- 2026-04-27, v1.1. Added rule 1.6 (Always share a viewable link + a clear next step). Triggered by recurring chat-output drift where Cowork messages closed without a link or a concrete next step.
