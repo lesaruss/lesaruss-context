@@ -180,6 +180,30 @@ When a terminal step is unavoidable, give the full command in a single copy-read
 
 **How to apply:** One block per command sequence. No prose between commands inside a block.
 
+### 4.4 Deploy from the actual repo, not the working folder (LOCKED 2026-04-27)
+
+`lesaruss.ai` is served by the **lesaruss-project** Vercel project (Next.js framework), GitHub repo `lesaruss/lesaruss-project`, deployed files at `public/{path}.html`. Static HTML at `public/playbooks/{slug}.html` is served as `/playbooks/{slug}.html`. The lesaruss-ai repo (static) serves `hq.lesaruss.ai` only, with files at the repo root. Always identify the correct repo before pushing, and always push via a fresh `/tmp/` git clone, never by trusting a Google-Drive working folder to mirror the deployed branch.
+
+**Why:** The HQ Google Drive folder at `/LESARUSS HQ--Claude--Projects--LESARUSS Project/` is a working tree of the lesaruss-project repo, but is OUT OF SYNC with the deployed branch. It has duplicate `playbooks/` directories at top level (legacy) AND at `public/playbooks/`. Only the `public/playbooks/` content actually deploys. Tier 1 + Tier 2 Playbook stubs live in `public/playbooks/`, NOT at the HQ folder's top-level `playbooks/`. On 2026-04-27 second pass, an agent burned ten minutes pushing to the wrong repo (lesaruss-ai instead of lesaruss-project) because lesaruss.ai serves from lesaruss-project and the agent assumed the repo name matched the domain.
+
+**Domain to repo to deploy path map (canonical):**
+
+| Domain | Vercel project | GitHub repo | Framework | Static path |
+|---|---|---|---|---|
+| lesaruss.ai | lesaruss-project | lesaruss/lesaruss-project | Next.js | `public/{path}` |
+| project.lesaruss.com | lesaruss-project | lesaruss/lesaruss-project | Next.js | `public/{path}` |
+| directory.lesaruss.com | lesaruss-project | lesaruss/lesaruss-project | Next.js | `public/{path}` |
+| vegansexplore.lesaruss.com | lesaruss-project | lesaruss/lesaruss-project | Next.js | `public/{path}` |
+| hq.lesaruss.ai | lesaruss-ai | lesaruss/lesaruss-ai | static | repo root |
+
+**How to apply:**
+- Before any deploy, look up the domain in the table above. Pick the correct repo.
+- Clone the repo into `/tmp/<short>` with `--depth 1`. Do not edit files in the Google Drive working folder and assume they will deploy.
+- Edit files at the correct path (`public/{path}` for lesaruss-project, repo root for lesaruss-ai).
+- Commit + push as Sean A. Russell per rule 4.1.
+- Verify via Vercel MCP `list_deployments` and a `curl -sI` against the live URL.
+- If you find the working folder out of sync with the repo, do not silently sync it back. Flag the drift to Sean.
+
 ---
 
 ## 5. Station parity
@@ -223,3 +247,5 @@ When a new universal rule is locked, it MUST be written to this repo, not only t
 - 2026-04-27, v1.0. File created. Triggered by V Station producing an MD playbook with no awareness of the auto-push or HTML-only rules. Migrated 14 rules from per-device auto-memory into the repo so they apply on every station.
 - 2026-04-27, v1.1. Added rule 1.6 (Always share a viewable link + a clear next step). Triggered by recurring chat-output drift where Cowork messages closed without a link or a concrete next step.
 - 2026-04-27, v1.2. Added rule 5.3 Memory routing protocol so future LOCKED universal rules land here automatically instead of in per-device auto-memory.
+- 2026-04-27, v1.3. Added rule 4.4 (Deploy from the actual repo, not the working folder) plus the domain-to-repo-to-path map. Triggered by 2026-04-27 second-pass push where an agent burned ten minutes cloning the wrong repo because lesaruss.ai (deployed from lesaruss-project) was assumed to deploy from lesaruss-ai.
+
