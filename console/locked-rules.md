@@ -202,7 +202,24 @@ Every LESARUSS station runs the same plugin and skill set: `lesaruss-internal-pa
 
 ---
 
+### 5.3 Memory routing protocol (LOCKED 2026-04-27)
+
+When a new universal rule is locked, it MUST be written to this repo, not only to per-device auto-memory. Local auto-memory is for journal-style observations (project state, session handoffs, references). Universal rules belong in the repo where every station fetches them.
+
+**Routing decision tree.** Before saving any new memory, ask three questions in order.
+
+1. Does the memory describe a rule that applies on every station, every brand, every project? If yes, it is universal. Save it to `console/locked-rules.md` in this repo. Add a one-line pointer in local `MEMORY.md` that links to the repo file. Do not duplicate the body.
+2. Does the memory describe state of one project, one brand, one client, one incident, one decision in flight? Save it to local auto-memory only. Do not push to the repo.
+3. Is it a reference to an external system (Linear project, Slack channel, dashboard URL)? Save to local auto-memory as a reference type. Repo not involved.
+
+**Why:** the 2026-04-27 V Station incident was caused by a LOCKED rule (auto-push playbooks) living in local memory only. V Station never saw it. The fix is not to push everything to the repo, it is to consistently route the universal rules to the repo and the per-device journal to local memory.
+
+**How to apply:** every time a memory is being saved, run the routing decision tree above. If a memory is universal, the body lives here, the local index just points. When a rule changes from project-specific to universal (which happens), the rule's body migrates from local memory to this file in the same turn the upgrade is recognized.
+
+---
+
 ## Change log
 
 - 2026-04-27, v1.0. File created. Triggered by V Station producing an MD playbook with no awareness of the auto-push or HTML-only rules. Migrated 14 rules from per-device auto-memory into the repo so they apply on every station.
 - 2026-04-27, v1.1. Added rule 1.6 (Always share a viewable link + a clear next step). Triggered by recurring chat-output drift where Cowork messages closed without a link or a concrete next step.
+- 2026-04-27, v1.2. Added rule 5.3 Memory routing protocol so future LOCKED universal rules land here automatically instead of in per-device auto-memory.
