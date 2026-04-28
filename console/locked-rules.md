@@ -153,6 +153,35 @@ font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto
 - Email HTML at `lib/email.ts` currently uses Helvetica Neue. That is a separate fix and is not covered by this rule.
 - This rule pairs with rule 2.2 (ADA WCAG 2 AA): font choice does not exempt mocks from the AA contrast and focus-ring requirements.
 
+### 2.7 Public page template lock (LOCKED 2026-04-28)
+
+Every route on a LESARUSS public surface (lesaruss.ai, project.lesaruss.com, brand subdomains) lives inside the `app/(public)/<route>/page.tsx` route group of the lesaruss-project repo. The route group's `app/(public)/layout.tsx` automatically wraps every public page in `PublicNav` + `PublicFooter`. Hero blocks use `components/public/PageHero.tsx` (display) or `components/public/PageHeroCompact.tsx` (form pages). Member shortcuts use `components/public/MemberBanner.tsx`. Hand-rolled `<nav>` and hand-rolled hero blocks are forbidden on public surfaces.
+
+**Why:** Before the lock, the four public pages on the codebase (`/`, `/intake`, `/welcome`, `/entry`) each carried their own inline nav with a different wordmark treatment, and `components/PageHeader.tsx` rendered the eyebrow in `var(--lr-orange)` on white which fails WCAG 2 AA at 10px (2.22 to 1). Every public-page change had to fix the same nav/footer/hero drift twice. The lock removes the drift surface.
+
+**How to apply:**
+- New public route: create `app/(public)/<route>/page.tsx`. Do NOT import or render `PublicNav`/`PublicFooter` inside the page body, the route-group layout already does that.
+- Hero block: use `<PageHero>` (display) or `<PageHeroCompact>` (forms). Eyebrow color is `var(--lr-text-50)` (#555 on white = 7.5 to 1), never orange.
+- Wordmark on every public page is `LESARUSS.AI` with the dot pulse. Legacy `LESARUSS PROJECT` is retired.
+- Font is Montserrat from the root layout, weights 200, 300, 400, 500, 700, 800, 900 per rule 2.6. Do NOT add a Google Fonts link tag inside a public page.
+- Mock-to-prod preview per rule 1.3: ship `public/v<N>/<route>/index.html` first, review on real Vercel infra, then promote into the routed page.
+- ADA pass per rule 2.2 is mandatory. The locked hero family already passes; custom additions need a re-run.
+- Skill `lesaruss-public-page` mirrors `lesaruss-internal-page`. It triggers automatically whenever an agent creates or edits a public-surface file. Install it on every station per rule 5.2.
+
+**Locked artifacts (lesaruss-project repo):**
+
+| Artifact | Path |
+|---|---|
+| Route-group shell | `app/(public)/layout.tsx` |
+| Top nav | `components/PublicNav.tsx` |
+| Footer | `components/PublicFooter.tsx` |
+| Display hero | `components/public/PageHero.tsx` |
+| Form hero | `components/public/PageHeroCompact.tsx` |
+| Member banner | `components/public/MemberBanner.tsx` |
+| Reference page | `app/(public)/intake/page.tsx` |
+| v1 preview | `public/v1/intake/index.html` |
+
+
 ---
 
 ## 3. Voice and content
@@ -317,3 +346,4 @@ When a new universal rule is locked, it MUST be written to this repo, not only t
 - 2026-04-27, v1.4. Added rule 2.5 (Brand Profile template locked). Triggered by Sean lock-in after GeekFon Society profile shipped and the eight-brand rollout was about to begin. Pairs with new `_templates/brand-profile-LOCKED.html` artifact.
 - 2026-04-27, v1.5. Added rule 4.5 (Persistent deploy clones live at `~/Code/<repo>`). Triggered by file architecture migration Phase 1, which surfaced 66 logical-path overlaps between Drive and `lesaruss-project` (including 20 em-dash fixes that had been applied in Drive but never propagated to the deployed branch). Pairs with the migration playbook at `hq.lesaruss.ai/playbooks/file-architecture-migration-playbook`.
 - 2026-04-28, v1.6. Added rule 2.6 (Mock font lock, Montserrat). Triggered by Sean noticing that the intake v2 mock at `LESARUSS Project/mocks/intake-v2.html` declared a system stack only and rendered with the wrong family. He asked "what fix was put in and why isn't it remembering the settings?" Audit found no prior rule, no shared mock template, no skill enforcement. Production uses Montserrat across every public surface; mocks that skip the import drift on every render. Local memory pointer at `feedback_mock_font_lock.md` updated to canonical-in-repo status.
+- 2026-04-28, v1.7. Added rule 2.7 (Public page template lock). Triggered by Sean lock-in after intake-v2 mock approval and audit found 4 different inline navs across `/`, `/intake`, `/welcome`, `/entry` plus a PageHeader eyebrow that fails AA on white. Pairs with new `app/(public)/` route group + `components/public/` hero family in lesaruss-project, and the new `lesaruss-public-page` skill mirroring `lesaruss-internal-page`.
