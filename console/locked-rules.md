@@ -1,7 +1,7 @@
 # LESARUSS Locked Rules
 
 **Owner:** Sean A. Russell
-**Updated:** 2026-04-27
+**Updated:** 2026-04-28
 **Purpose:** Single, scannable index of every LOCKED universal rule. Any rule listed here applies on every station, every Cowork session, every project, every brand. If a rule appears here AND in auto-memory, this file wins.
 
 > Why this file exists: auto-memory is per-device. Rules that must apply everywhere have to live in this repo so the auto-fetch chain pulls them on every session start. Without this file, V Station and other secondary stations operate with the public-facing rules only and miss the operating rules. That gap is what produced the 2026-04-27 Authority Engine MD writeup incident.
@@ -120,9 +120,38 @@ The Brand Profile page (lesaruss.ai/c/<slug>) layout is locked. Eight sections i
 - Data contract: `Campaign` interface in `lib/campaigns.ts`.
 - To add a new brand profile: add to `BRANDS` in `lib/brands.ts`, add an overlay to `OVERLAYS` in `lib/campaigns.ts`. Do NOT modify the CampaignProfile component layout.
 - Optional logo asset on the hero: set `heroAssetPath` in the overlay; otherwise the monogram + brand-color gradient fallback renders.
-- Pledge-first CTA across every state (LOCKED 2026-04-27, supersedes prior status-driven copy). Every brand will be open for pledges at launch, so the primary CTA on every brand profile and brand grid card is pledge-themed regardless of campaign state. Profile primary CTAs by state: active = "Pledge & move the line", draft = "Pledge to open this brand", launched = "Pledge to keep this growing", archived = "Pledge the relaunch". Profile secondary CTA is universal: "Hear from Sean" (replaces share). Brand grid action labels are pledge-themed per brand (e.g. Pledge The Movement, Pledge The Universe). The funnel goal is to bring visitors to the pledge moment and then push Sean to the foreground to pitch.
+- Status states drive CTA copy: active = "Pledge & move the line", draft = "Notify me", launched = "Enter the brand", archived = "Read the case study".
 - Pairs with rule 3.5 (no claim rail on LESARUSS-owned brands).
 - Any layout change requires explicit Sean approval and an update to this rule plus the locked HTML template.
+
+### 2.6 Mock font lock, Montserrat (LOCKED 2026-04-28)
+
+Every LESARUSS HTML mock, preview, briefing, playbook, internal page, public-surface mock, and design exploration must load **Montserrat** from Google Fonts at the top of the file. Falling back to `system-ui` or `ui-sans-serif` alone is non-compliant. Production lesaruss-project public HTML uses Montserrat everywhere; mocks that skip the import predict a render production never produces.
+
+**Canonical include block (paste verbatim into every mock head):**
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+```
+
+**Canonical body font stack:**
+
+```css
+font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+```
+
+**Why:** Production uses Montserrat across `public/signal/`, `public/v3/` through `v5/`, `public/preview/`, `public/proof-tools/`, the brand SVG logo (`public/brand/lesaruss-logo-light.svg`), and `modules/geekfon-radio.js`. Brand voice (extrabold uppercase headings, extralight body) maps directly to Montserrat 800 and 200. When a mock loads only the system stack, every operating system substitutes a different family and the mock fails to predict what production will render. Sean flagged this drift on 2026-04-28: "the font is still not locking in on these mocks. What fix was put in and why isn't it remembering the settings?" Truth: nothing was locked, no rule existed, no skill enforced it. This rule is the lock.
+
+**How to apply:**
+
+- Every new HTML mock starts by pasting the include block above into the head, before the `<style>` block.
+- The body `font-family` is the canonical stack above. Every other selector uses `font-family: inherit`.
+- `_templates/internal-page-LOCKED.html` already pre-includes Montserrat. Verify on every relock pass.
+- The upcoming public-page locked template (rule TBD, route group `(public)`) must pre-include this block.
+- Email HTML at `lib/email.ts` currently uses Helvetica Neue. That is a separate fix and is not covered by this rule.
+- This rule pairs with rule 2.2 (ADA WCAG 2 AA): font choice does not exempt mocks from the AA contrast and focus-ring requirements.
 
 ---
 
@@ -279,33 +308,12 @@ When a new universal rule is locked, it MUST be written to this repo, not only t
 
 ---
 
-## 6. Pricing and product model
-
-### 6.1 Pricing is tuned per Console (LOCKED 2026-04-27)
-
-Each Console benchmarks pricing against its real comparable, not against the LESARUSS default ladder. The default ladder ($11 entry, $111/mo DIY, $1,111/mo Guided, $25K/qtr Structured) is the fallback when no domain-specific benchmark exists, not a universal mandate.
-
-**Why:** Different Consoles compete with different alternatives. The Authority Engine competes with retained executive search, where one $250K placement runs $75K to $82K. Pricing the Authority Engine DFY at the default $25K/qtr ($100K/yr) reads as more expensive than a one-time placement, even though the Engine delivers a fundamentally different shape (continuous Radar, Library, Strategist relationship). ADA Unlocked competes with compliance audit firms, not with SaaS. Content Creator Console competes with creator-economy SaaS. One ladder cannot serve all of those benchmarks.
-
-**How to apply:** When pricing a new Console or repricing an existing one, name the comparable purchase decision the member is making (retained search, compliance audit, creator SaaS, etc.), pull the market range, and price the Console against that range with the LESARUSS 1's pattern preserved where possible ($11, $111, $1,111, $11K, $111K). Document the math next to the price on the Console playbook page. The first locked override is the Authority Engine: $11K/qtr DFY (was $25K/qtr) because retained search benchmarks at $20K to $27K/qtr for one search, and DFY delivers ongoing positioning practice not single-placement service.
-
-### 6.2 $11 floor on every Console front door, no free tier (LOCKED 2026-04-27)
-
-Every Console's front door offer is priced at $11 one-time minimum. No free tier across the LESARUSS universe. The Authority Scorecard, ADA Audit, Content Creator Scorecard, and any future front-door offer that previously read "Free" or "$0" all become $11 one-time.
-
-**Why:** Free does not plant the seed. Free trains members to expect zero value commitment, which depresses upgrade conversion to the paid tiers. $11 one-time is the smallest commitment the LESARUSS 1's pattern allows, gives the member skin in the game, captures contact data with a real payment method, and is universally affordable. The $11 also pays the per-member infrastructure cost of running the Scorecard or front-door offer without subsidy.
-
-**How to apply:** Audit every Console for a free tier or free front-door offer. Replace with $11 one-time. Update the pricing table, the on-ramp tier card, the marketing page, and the auto-fetched cartridge file in this repo. The previous "Authority Scorecard at Free" wording is fully deprecated.
-
----
-
 ## Change log
 
-- 2026-04-27, v1.7. Added section 6 (Pricing and product model) with rule 6.1 (Pricing is tuned per Console) and rule 6.2 ($11 floor on every Console front door, no free tier). Triggered by Sean directive that the Authority Engine's $25K/qtr DFY tier reads as too high vs retained search comparables. Both rules migrated from per-device auto-memory in the same turn they were locked. First locked Console override (Authority Engine: $11K/qtr DFY) lives in `cartridges/brands/lesaruss-project.md` and on the deployed Authority Engine playbook.
 - 2026-04-27, v1.0. File created. Triggered by V Station producing an MD playbook with no awareness of the auto-push or HTML-only rules. Migrated 14 rules from per-device auto-memory into the repo so they apply on every station.
 - 2026-04-27, v1.1. Added rule 1.6 (Always share a viewable link + a clear next step). Triggered by recurring chat-output drift where Cowork messages closed without a link or a concrete next step.
 - 2026-04-27, v1.2. Added rule 5.3 Memory routing protocol so future LOCKED universal rules land here automatically instead of in per-device auto-memory.
 - 2026-04-27, v1.3. Added rule 4.4 (Deploy from the actual repo, not the working folder) plus the domain-to-repo-to-path map. Triggered by 2026-04-27 second-pass push where an agent burned ten minutes cloning the wrong repo because lesaruss.ai (deployed from lesaruss-project) was assumed to deploy from lesaruss-ai.
 - 2026-04-27, v1.4. Added rule 2.5 (Brand Profile template locked). Triggered by Sean lock-in after GeekFon Society profile shipped and the eight-brand rollout was about to begin. Pairs with new `_templates/brand-profile-LOCKED.html` artifact.
-- 2026-04-27, v1.6. Updated rule 2.5 to lock pledge-first CTAs across every campaign state plus a universal "Hear from Sean" secondary. Triggered by Sean directive: every brand goes pledge-available at launch, so the universal CTA rail is always pledge, never status-bound.
 - 2026-04-27, v1.5. Added rule 4.5 (Persistent deploy clones live at `~/Code/<repo>`). Triggered by file architecture migration Phase 1, which surfaced 66 logical-path overlaps between Drive and `lesaruss-project` (including 20 em-dash fixes that had been applied in Drive but never propagated to the deployed branch). Pairs with the migration playbook at `hq.lesaruss.ai/playbooks/file-architecture-migration-playbook`.
+- 2026-04-28, v1.6. Added rule 2.6 (Mock font lock, Montserrat). Triggered by Sean noticing that the intake v2 mock at `LESARUSS Project/mocks/intake-v2.html` declared a system stack only and rendered with the wrong family. He asked "what fix was put in and why isn't it remembering the settings?" Audit found no prior rule, no shared mock template, no skill enforcement. Production uses Montserrat across every public surface; mocks that skip the import drift on every render. Local memory pointer at `feedback_mock_font_lock.md` updated to canonical-in-repo status.
