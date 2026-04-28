@@ -279,8 +279,29 @@ When a new universal rule is locked, it MUST be written to this repo, not only t
 
 ---
 
+## 6. Pricing and product model
+
+### 6.1 Pricing is tuned per Console (LOCKED 2026-04-27)
+
+Each Console benchmarks pricing against its real comparable, not against the LESARUSS default ladder. The default ladder ($11 entry, $111/mo DIY, $1,111/mo Guided, $25K/qtr Structured) is the fallback when no domain-specific benchmark exists, not a universal mandate.
+
+**Why:** Different Consoles compete with different alternatives. The Authority Engine competes with retained executive search, where one $250K placement runs $75K to $82K. Pricing the Authority Engine DFY at the default $25K/qtr ($100K/yr) reads as more expensive than a one-time placement, even though the Engine delivers a fundamentally different shape (continuous Radar, Library, Strategist relationship). ADA Unlocked competes with compliance audit firms, not with SaaS. Content Creator Console competes with creator-economy SaaS. One ladder cannot serve all of those benchmarks.
+
+**How to apply:** When pricing a new Console or repricing an existing one, name the comparable purchase decision the member is making (retained search, compliance audit, creator SaaS, etc.), pull the market range, and price the Console against that range with the LESARUSS 1's pattern preserved where possible ($11, $111, $1,111, $11K, $111K). Document the math next to the price on the Console playbook page. The first locked override is the Authority Engine: $11K/qtr DFY (was $25K/qtr) because retained search benchmarks at $20K to $27K/qtr for one search, and DFY delivers ongoing positioning practice not single-placement service.
+
+### 6.2 $11 floor on every Console front door, no free tier (LOCKED 2026-04-27)
+
+Every Console's front door offer is priced at $11 one-time minimum. No free tier across the LESARUSS universe. The Authority Scorecard, ADA Audit, Content Creator Scorecard, and any future front-door offer that previously read "Free" or "$0" all become $11 one-time.
+
+**Why:** Free does not plant the seed. Free trains members to expect zero value commitment, which depresses upgrade conversion to the paid tiers. $11 one-time is the smallest commitment the LESARUSS 1's pattern allows, gives the member skin in the game, captures contact data with a real payment method, and is universally affordable. The $11 also pays the per-member infrastructure cost of running the Scorecard or front-door offer without subsidy.
+
+**How to apply:** Audit every Console for a free tier or free front-door offer. Replace with $11 one-time. Update the pricing table, the on-ramp tier card, the marketing page, and the auto-fetched cartridge file in this repo. The previous "Authority Scorecard at Free" wording is fully deprecated.
+
+---
+
 ## Change log
 
+- 2026-04-27, v1.7. Added section 6 (Pricing and product model) with rule 6.1 (Pricing is tuned per Console) and rule 6.2 ($11 floor on every Console front door, no free tier). Triggered by Sean directive that the Authority Engine's $25K/qtr DFY tier reads as too high vs retained search comparables. Both rules migrated from per-device auto-memory in the same turn they were locked. First locked Console override (Authority Engine: $11K/qtr DFY) lives in `cartridges/brands/lesaruss-project.md` and on the deployed Authority Engine playbook.
 - 2026-04-27, v1.0. File created. Triggered by V Station producing an MD playbook with no awareness of the auto-push or HTML-only rules. Migrated 14 rules from per-device auto-memory into the repo so they apply on every station.
 - 2026-04-27, v1.1. Added rule 1.6 (Always share a viewable link + a clear next step). Triggered by recurring chat-output drift where Cowork messages closed without a link or a concrete next step.
 - 2026-04-27, v1.2. Added rule 5.3 Memory routing protocol so future LOCKED universal rules land here automatically instead of in per-device auto-memory.
