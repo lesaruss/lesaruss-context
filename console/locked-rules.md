@@ -74,6 +74,27 @@ Every wrap-up message after a completed process (deploy, push, file write, mock 
 
 ---
 
+
+### 1.7 Brand preflight before every shared link (LOCKED 2026-04-30)
+
+Before Claude shares any link with the user, a brand preflight check runs against (a) the link label text, (b) the surrounding chat response Claude is about to deliver, and (c) the artifact at the URL when it is a LESARUSS-controlled surface that Claude produced or modified in the same turn. Day 1 rule set is the text brand baseline:
+
+1. No em-dashes anywhere. Replace with comma, period, colon, or plain hyphen.
+2. Vegan, Vegans, and Veganism are always capital V.
+3. LESARUSS is spelled L-E-S-A-R-U-S-S in all caps. Fieldy transcription misspellings (Lasaris, Lasarus, Lisarus, Osaris, Osiris) are always wrong.
+4. Sean A. Russell is spelled correctly. Voice transcription often produces "Shawnee Russell"; that is always wrong.
+5. GeekFon is spelled F-O-N, never GeekFun.
+
+Behavior on fail: auto-fix silently, re-run the check, share clean. The check is invisible to Sean unless an issue is genuinely ambiguous, in which case Claude surfaces it as an A/B option per rule 1.6. Matches the existing "ADA check is silent, fix once, deliver a one-line summary" pattern from rule 2.2.
+
+Visual baseline (palette, font, contrast, white default), public-surface baseline (no BCPS or Title II on public, no claim rail on owned brands), and email-specific baseline (Montserrat preferred with system fallback, AAA on small text) are intentionally OUT of Day 1 scope. They layer on as later additions to this rule, after the Day 1 baseline is stable.
+
+**Why:** the 2026-04-30 activation-email incident. The Phase 2 magic-link email mock was shared without verifying that its panel color (#fffaf0 cream) was inside the locked palette. Sean had to flag it, costing one round trip. The pattern is preflight, well-known in aviation, print publishing (Adobe PDF Preflight), and now AI marketing compliance (puntt.ai, AuditSocials, getdevdone). Prior-art check via the `vetted-pattern-first` skill found Vale (rules-as-data prose linter, ~5k stars, Microsoft + Google adoption) and Atlassian's `eslint-plugin-design-system` as canonical implementation references. Recommendation: ADAPT. Adopt the name "preflight" and the rules-as-data architecture from Vale; keep the trigger ("the moment Claude is about to share a link") and the rule content LESARUSS-original.
+
+**How to apply:** the `lesaruss-preflight` skill enforces this rule. It fires automatically the moment Claude composes a markdown link, a `computer://` link, or any phrasing that resolves to a URL share (view your, preview at, live at, here's the link, deployed to, Sources: section). Never hand-roll the check on every page. The skill is the single source of truth and inherits across every station via the standard skill-load chain.
+
+---
+
 ## 2. Visual and accessibility
 
 ### 2.1 White-only universal default (LOCKED 2026-04-24, supersedes auto-theme)
@@ -347,3 +368,4 @@ When a new universal rule is locked, it MUST be written to this repo, not only t
 - 2026-04-27, v1.5. Added rule 4.5 (Persistent deploy clones live at `~/Code/<repo>`). Triggered by file architecture migration Phase 1, which surfaced 66 logical-path overlaps between Drive and `lesaruss-project` (including 20 em-dash fixes that had been applied in Drive but never propagated to the deployed branch). Pairs with the migration playbook at `hq.lesaruss.ai/playbooks/file-architecture-migration-playbook`.
 - 2026-04-28, v1.6. Added rule 2.6 (Mock font lock, Montserrat). Triggered by Sean noticing that the intake v2 mock at `LESARUSS Project/mocks/intake-v2.html` declared a system stack only and rendered with the wrong family. He asked "what fix was put in and why isn't it remembering the settings?" Audit found no prior rule, no shared mock template, no skill enforcement. Production uses Montserrat across every public surface; mocks that skip the import drift on every render. Local memory pointer at `feedback_mock_font_lock.md` updated to canonical-in-repo status.
 - 2026-04-28, v1.7. Added rule 2.7 (Public page template lock). Triggered by Sean lock-in after intake-v2 mock approval and audit found 4 different inline navs across `/`, `/intake`, `/welcome`, `/entry` plus a PageHeader eyebrow that fails AA on white. Pairs with new `app/(public)/` route group + `components/public/` hero family in lesaruss-project, and the new `lesaruss-public-page` skill mirroring `lesaruss-internal-page`.
+- 2026-04-30, v1.8. Added rule 1.7 (Brand preflight before every shared link) plus skill `lesaruss-preflight`. Triggered by 2026-04-30 chat: the Phase 2 activation-email mock at `lesaruss.ai/v2/activation-email/index.html` was shared without verifying the cream panel color (#fffaf0) was inside the locked palette. Sean asked "make sure it's on brand" and "this should feed across all stations in the Universe." Prior-art search by `vetted-pattern-first`: ADAPT preflight (Adobe PDF Preflight, AI marketing compliance category) + Vale rules-as-data architecture (Microsoft + Google adoption). Day 1 scope is the text brand baseline only (em-dashes, Vegan-V, LESARUSS spelling, Sean spelling, GeekFon). Visual + public-surface + email baselines deferred per Sean's calibration so the rule lands clean before scope expands.
