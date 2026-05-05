@@ -369,3 +369,126 @@ When a new universal rule is locked, it MUST be written to this repo, not only t
 - 2026-04-28, v1.6. Added rule 2.6 (Mock font lock, Montserrat). Triggered by Sean noticing that the intake v2 mock at `LESARUSS Project/mocks/intake-v2.html` declared a system stack only and rendered with the wrong family. He asked "what fix was put in and why isn't it remembering the settings?" Audit found no prior rule, no shared mock template, no skill enforcement. Production uses Montserrat across every public surface; mocks that skip the import drift on every render. Local memory pointer at `feedback_mock_font_lock.md` updated to canonical-in-repo status.
 - 2026-04-28, v1.7. Added rule 2.7 (Public page template lock). Triggered by Sean lock-in after intake-v2 mock approval and audit found 4 different inline navs across `/`, `/intake`, `/welcome`, `/entry` plus a PageHeader eyebrow that fails AA on white. Pairs with new `app/(public)/` route group + `components/public/` hero family in lesaruss-project, and the new `lesaruss-public-page` skill mirroring `lesaruss-internal-page`.
 - 2026-04-30, v1.8. Added rule 1.7 (Brand preflight before every shared link) plus skill `lesaruss-preflight`. Triggered by 2026-04-30 chat: the Phase 2 activation-email mock at `lesaruss.ai/v2/activation-email/index.html` was shared without verifying the cream panel color (#fffaf0) was inside the locked palette. Sean asked "make sure it's on brand" and "this should feed across all stations in the Universe." Prior-art search by `vetted-pattern-first`: ADAPT preflight (Adobe PDF Preflight, AI marketing compliance category) + Vale rules-as-data architecture (Microsoft + Google adoption). Day 1 scope is the text brand baseline only (em-dashes, Vegan-V, LESARUSS spelling, Sean spelling, GeekFon). Visual + public-surface + email baselines deferred per Sean's calibration so the rule lands clean before scope expands.
+
+---
+
+## 6. Agent operating standards
+
+### 6.1 Execute directly, minimal Sean involvement (universal)
+
+Always find a way to do tasks directly using available tools. Never hand the user a list of manual steps when Claude has the capability to execute them. If something can be done with bash, browser automation, an MCP tool, or the file system, do it. Only surface a required manual step when genuinely blocked.
+
+When a terminal step is unavoidable, give the full command in a single copy-ready code block. Never ask Sean to "cd to your repo root" — write the absolute path. Never break a command sequence across paragraphs.
+
+**Why:** Sean is running 8 brands. Every manual step handed back to him is friction. He has stated minimal-involvement preference explicitly and repeatedly. The team exists to absorb execution, not delegate it.
+
+**How to apply:** Before writing "you'll need to do X," ask: can bash, the browser MCP, a file tool, or any available integration do this instead? If yes, do it. Only fall back to the user when the sandbox genuinely cannot reach the target (e.g., certain outbound network restrictions). When that happens, give one copy-ready block, nothing more.
+
+### 6.2 Decision protocol — never ask obvious-yes questions (universal)
+
+Never ask Sean a question where the answer is obviously "do the right thing." Research it, form a recommendation, and act. Surface Sean only for: genuine cost decisions (state amount + options + recommendation), genuine path forks where his preference is the deciding factor, or hard blockers that cannot proceed without his input.
+
+Default decision framework: (1) Best option — pursue unless cost is prohibitive. (2) If unaffordable, next best. (3) If still blocked, surface to Sean with a recommendation already attached.
+
+**Why:** Sean's time is the most valuable resource. Questions with obvious answers are waste. Every decision that can be made correctly without him should be.
+
+**How to apply:** Before asking any question, ask: "Is the answer obviously yes?" If yes, proceed. If there is real cost or a genuine fork, present it in one sentence with a recommended path. Never present a problem without a proposed solution.
+
+### 6.3 Change only what was asked (universal)
+
+When Sean gives a single-axis instruction ("make the font smaller," "match the heading style," "change the color"), change only that attribute. Do not bundle related CSS properties, layout changes, or visual tweaks that were not requested.
+
+**Why:** 2026-04-27 — Sean asked to make 5 page headers smaller to match another page. Font-size, letter-spacing, and line-height were all changed at once. He pushed back: "This is 100% wrong. I just wanted you to make the size smaller." Bundling unrequested changes costs trust and round trips.
+
+**How to apply:** "Make the font smaller" = change font-size only. "Match the heading style" = change only the obviously requested attribute (usually font-size) and explicitly note what else differs so Sean can decide. Always preview mocks with the actual site font (Montserrat for LESARUSS) loaded — system fallbacks lie about visual weight.
+
+### 6.4 Infrastructure is never Sean's problem (LOCKED 2026-04-17)
+
+Infrastructure issues are never surfaced to Sean as problems to solve. If something breaks, Sable fixes it and Victoria tells Sean it has been handled. That is the only update Sean gets. If a decision genuinely needs his input: one paragraph, one recommended option, no troubleshooting in his presence.
+
+All shared files — skill files, task prompts, templates, context documents — live in GitHub and are fetched at runtime. Nothing is ever hardcoded to a local machine path. Every new station inherits the same config automatically.
+
+**Why:** Sean is in Phase 2 (creation). Infrastructure conversations pull him back into Phase 1 (setup). The team exists to hold the stack so he does not have to. Local paths break the moment a second machine exists.
+
+**How to apply:** When writing any task prompt, template, or skill, never reference a local path. Always reference GitHub or a Supabase-stored value. When reporting to Sean on infrastructure: status only — "Running." or "Was down, fixed — here is what changed." One sentence.
+
+---
+
+## Additions to Section 2
+
+### 2.8 Dot pulse spacing — universe-wide (LOCKED 2026-05-05)
+
+Every `.dot` class across every LESARUSS brand must include `margin-left:0.06em`. Without it the dot brushes against the final letter at smaller font sizes or in tight letter-spacing contexts. The reference standard is the consultant page h1 "Install the System."
+
+**Canonical CSS rule:**
+```css
+.dot { color: var(--orange); display: inline-block; margin-left: 0.06em; animation: dotPulse 2s ease-in-out infinite; }
+```
+
+**Why:** Spacing drift appeared across seanarussell-site, lesaruss-ai, and lesaruss-project independently. The margin is a brand constant, not a per-file choice.
+
+**How to apply:** When creating or copying any page template across any LESARUSS brand, verify `margin-left:0.06em` is present in the `.dot` rule before shipping. Applies to seanarussell-site, lesaruss-ai, lesaruss-project, vegansexplore-com, and any future brand repos.
+
+### 2.9 HQ module icon standard — locked set (LOCKED 2026-05-05)
+
+The four module icons in `.nav-right` on every HQ internal page are a locked canonical set. Do not change them per page or add unlisted icons without Sean's explicit approval.
+
+**Locked set:**
+- Signal (`/signal`) — master report
+- Mission Control (`/mission-control`) — ops hub
+- Directory (`/directory`) — member directory
+- Add Module (`/modules`) — opens module directory
+
+Nav-link modules use `<a href>` tags, never `<button>` elements. To mark the current page active, add class `active` to its icon only.
+
+**Single-pulse rule:** ONE pulsing dot on HQ pages — the nav wordmark `LESARUSS.AI` (`.dot` span). The footer mark is plain static text `LESARUSS.AI` with no `.dot` class and no animation.
+
+**No agent names rule:** Do not use agent persona names (Victoria, Rami, Cyrus, Marcus, etc.) in nav or page content. Use roles only: "Ops Agent," "Brand Manager," "Creative Producer." The SR avatar (Sean) is the logged-in user indicator, not an agent, and stays.
+
+**Why:** Module icons were drifting on every new page — some had GeekFon Radio, some Daily Brief, some Signal. Sean locked the set 2026-05-05.
+
+**How to apply:** When building or editing any HQ internal page, verify nav-right contains exactly these four icons in this order. Remove any unlisted icons. Use the locked template (`_templates/internal-page-LOCKED.html`) which pre-includes the correct set.
+
+---
+
+## Additions to Section 3
+
+### 3.6 Transformation over features — member-facing copy (universal)
+
+Every member-facing asset (email, landing page, onboarding, pitch, brand description) leads with the transformation the reader goes through, not the features they receive. The reader is the hero. LESARUSS is the guide.
+
+Four-part frame (never reorder):
+1. Who you could become (transformation)
+2. What we do for you (guidance)
+3. What we ask (commitment)
+4. What it costs (price or time)
+
+Strip internal vocabulary (Console, Cartridge, Module, Build Log, Playbook) from member-facing copy. Those words live in internal docs only. Members get human language about where they are going.
+
+**Why:** 2026-04-23 — Sean flagged a Founders Beta draft that led with benefit-lists and product vocabulary: "there is a difference between what the founder gets and the transformation the founder goes through. We are in the business of transformation." GoHighLevel is the named anti-pattern.
+
+**How to apply:** Before finalizing any member-facing copy for any brand, run it through the four-part frame. If the first sentence names a feature or a tool, rewrite it. If LESARUSS is the noun at the center of the journey instead of the reader, rewrite it. Internal playbooks and briefings are exempt.
+
+### 3.7 "Contact a Human" — exact label, universal (LOCKED 2026-04-21)
+
+Every member-facing or client-facing escalation surface uses the exact label **"Contact a Human"**. Never "Call a Human," "Talk to Us," "Chat with a Person," or any variant. The button class and id should be `contact-human`.
+
+Every click opens a ticket tagged with the account, the Module or Cartridge the member was in, and the full conversation thread. Routing: if the account has an assigned human reviewer, the ticket goes to them; otherwise it goes to the general pool (which defaults to Sean until the next Community Manager hire).
+
+**Why:** "Call" implies a live phone call, setting the wrong expectation. "Contact" is accurate — the interaction is async by design and routes deterministically.
+
+**How to apply:** In any mock, page, or component with a human-handoff surface, use "Contact a Human" verbatim. Include a short nearby copy line that makes the ticket nature clear. Never promise a live real-time human. Applies to every brand, every Module, every Console, every internal and public page that exposes an escalation path.
+
+### 3.8 Paced rollout as hype — intentional increment parking (universal)
+
+Ship the minimum viable version of a module at launch. Park the obvious next increments in the pipeline intentionally, not by accident. Each parked increment is future hype inventory — a "new this week" beat for member emails, broadcasts, and announcements.
+
+**Why:** If everything ships on day one there is nothing left to announce. A disciplined cadence prevents scope creep from delaying launches and gives the content pipeline a steady drumbeat.
+
+**How to apply:** When scoping any launch, separate "need for launch" from "would be nice." Push "would be nice" items to a post-launch queue and label them as update fuel. Do not treat parked items as tech debt. When Sean declines to add scope or says "let's pace this," record it in the pipeline and move on — do not offer to bundle it in.
+
+---
+
+## Change log (continued)
+
+- 2026-05-05, v1.9. Added Section 6 (Agent operating standards): rules 6.1 (execute directly), 6.2 (decision protocol), 6.3 (change only what was asked), 6.4 (infrastructure ownership). Added rules 2.8 (dot pulse spacing), 2.9 (HQ module icon standard), 3.6 (transformation over features), 3.7 (Contact a Human label), 3.8 (paced rollout as hype). Triggered by audit finding 22 local-only feedback files, 10 of which had no canonical entry. Migrated all 10 to this file in one pass.
