@@ -93,6 +93,18 @@ Visual baseline (palette, font, contrast, white default), public-surface baselin
 
 **How to apply:** the `lesaruss-preflight` skill enforces this rule. It fires automatically the moment Claude composes a markdown link, a `computer://` link, or any phrasing that resolves to a URL share (view your, preview at, live at, here's the link, deployed to, Sources: section). Never hand-roll the check on every page. The skill is the single source of truth and inherits across every station via the standard skill-load chain.
 
+### 1.8 Session preflight before first substantive tool call (LOCKED 2026-05-05)
+
+Before the first substantive tool call of any conversation (file edit, deploy, push, mock creation, briefing, "Continue" command, member-facing-surface change), a session preflight check runs to verify the canonical universal rules are loaded into working memory. Day 1 scope is fetch verification only: did `console/core.md`, `console/locked-rules.md`, and the rest of the canonical fetch list land in this session. If anything is missing, the skill fetches it now via WebFetch against `raw.githubusercontent.com/lesaruss/lesaruss-context/main/<path>`. Behavior is silent on PASS, one line on PARTIAL, one line on FAIL with degraded-confidence proceed, postscript "(Preflight not run this session.)" on the first substantive output of any session that skipped the gate.
+
+This is the SISTER rule to 1.7. Rule 1.7 is the per-link gate. Rule 1.8 is the per-session gate. Both fire automatically. Both are silent on pass.
+
+**Why:** the 2026-05-05 conversation. Sean asked "how can we work where you don't make mistakes." Diagnosis: the project-instructions fetch step at session start is a soft default, not a hard gate, so canonical rules are sometimes loaded and sometimes not. The recurring drift Sean has been flagging across multiple sessions traces to that gap. Prior-art search by `vetted-pattern-first` found the pattern is mainstream by 2026: aviation pre-flight checklists, software pre-commit hooks, "Agent Safety Gates: 12 Preflight Checks Before Tools Run" (Medium, March 2026), "Preflight the Plane" (AI-Assisted Software Development), and the index-first progressive-disclosure pattern (MindStudio). Recommendation: ADAPT. Adopt the preflight name and the gating-before-irreversible-action contract; keep the trigger ("first substantive tool call of a session") and the canonical fetch list LESARUSS-specific.
+
+**How to apply:** the `lesaruss-session-preflight` skill enforces this rule. It fires automatically before the first qualifying tool call. Never hand-roll the check on every session. The skill is the single source of truth and inherits across every station via the standard skill-load chain. Skipped-session detection produces a visible postscript so even a missed gate is loud, not silent. Composes with rule 1.7 (per-link preflight), rule 2.2 (ADA at write time), and rules 2.3 + 2.7 (template-locked write gates). Future scope (deploy-token verification, template-presence verification, brand-cartridge match) lands as additional sub-sections here, scope-narrow-first per the rule 1.7 pattern.
+
+---
+
 ---
 
 ## 2. Visual and accessibility
@@ -492,3 +504,4 @@ Ship the minimum viable version of a module at launch. Park the obvious next inc
 ## Change log (continued)
 
 - 2026-05-05, v1.9. Added Section 6 (Agent operating standards): rules 6.1 (execute directly), 6.2 (decision protocol), 6.3 (change only what was asked), 6.4 (infrastructure ownership). Added rules 2.8 (dot pulse spacing), 2.9 (HQ module icon standard), 3.6 (transformation over features), 3.7 (Contact a Human label), 3.8 (paced rollout as hype). Triggered by audit finding 22 local-only feedback files, 10 of which had no canonical entry. Migrated all 10 to this file in one pass.
+- 2026-05-05, v2.0. Added rule 1.8 (Session preflight before first substantive tool call) plus skill `lesaruss-session-preflight`. Triggered by the 2026-05-05 conversation where Sean asked "how can I program or work with you where you do not make mistakes." Diagnosis: the project-instructions fetch step at session start was a soft default, not a hard gate, so canonical rules were sometimes loaded and sometimes not. The same shape of drift kept recurring across sessions. Prior-art search by `vetted-pattern-first`: ADAPT preflight pattern from aviation, software pre-commit hooks, and "Agent Safety Gates: 12 Preflight Checks Before Tools Run" (Medium, March 2026). Sister rule to 1.7. Both fire automatically. Both are silent on pass. Day 1 scope is fetch verification only.
